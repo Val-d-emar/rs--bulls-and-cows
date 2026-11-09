@@ -1,4 +1,4 @@
-import type { GameSettings, GameState, GuessScore } from './types.js';
+import type { GameSettings, GameState, GuessScore, HistoryEntry } from './types.js';
 
 /**
  * Сравнивает попытку игрока с секретом и вычисляет количество быков и коров.
@@ -31,12 +31,18 @@ export const evaluateGuess = (secret: string, guess: string): GuessScore => {
  * @returns начальное состояние GameState
  */
 export const createInitialState = (
-  _settings: GameSettings,
-  _secret: string,
-  _startTimeMs: number = Date.now(),
+  settings: GameSettings,
+  secret: string,
+  startTimeMs: number = Date.now(),
 ): GameState => {
-  // Временная заглушка для TDD
-  return undefined as unknown as GameState;
+  return {
+    settings,
+    secret,
+    status: 'playing',
+    history: [],
+    startTimeMs,
+    endTimeMs: null,
+  };
 };
 
 /**
@@ -48,10 +54,33 @@ export const createInitialState = (
  * @returns новое иммутабельное состояние GameState
  */
 export const makeMove = (
-  _state: GameState,
-  _guess: string,
-  _currentTimeMs: number = Date.now(),
+  state: GameState,
+  guess: string,
+  currentTimeMs: number = Date.now(),
 ): GameState => {
-  // Временная заглушка для TDD
-  return undefined as unknown as GameState;
+  if (state.status !== 'playing') {
+    return state;
+  }
+
+  const normalizedGuess = guess.toLowerCase();
+
+  const isDuplicate = state.history.some((entry) => entry.guess === normalizedGuess);
+  if (isDuplicate) {
+    return state;
+  }
+
+  const score = evaluateGuess(state.secret, normalizedGuess);
+  const isWon = score.bulls === state.settings.length;
+
+  const newEntry: HistoryEntry = {
+    guess: normalizedGuess,
+    score,
+  };
+
+  return {
+    ...state,
+    status: isWon ? 'won' : state.status,
+    endTimeMs: isWon ? currentTimeMs : state.endTimeMs,
+    history: [...state.history, newEntry],
+  };
 };
