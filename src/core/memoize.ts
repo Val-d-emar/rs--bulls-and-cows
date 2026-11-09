@@ -8,10 +8,20 @@
  * @returns мемоизированная версия переданной функции
  */
 export const memoize = <Args extends unknown[], Result>(
-  _fn: (...args: Args) => Result,
-  _keyResolver?: (...args: Args) => string,
+  fn: (...args: Args) => Result,
+  keyResolver?: (...args: Args) => string,
 ): ((...args: Args) => Result) => {
-  return (..._args: Args): Result => {
-    return undefined as unknown as Result;
+  const cache = new Map<string, Result>();
+
+  return (...args: Args): Result => {
+    const key = keyResolver ? keyResolver(...args) : JSON.stringify(args);
+
+    if (cache.has(key)) {
+      return cache.get(key) as Result;
+    }
+
+    const result = fn(...args);
+    cache.set(key, result);
+    return result;
   };
 };
