@@ -31,7 +31,21 @@ export const createDigitValidator = (base: Radix): ((char: string) => boolean) =
  * @param _base - система счисления
  * @returns boolean
  */
-export const isValidGuess = (_guess: string, _length: number, _base: Radix): boolean => {
-  // Временная заглушка для TDD (падающий тест)
-  return false;
+export const isValidGuess = (guess: string, length: number, base: Radix): boolean => {
+  const normalizedGuess = guess.toLowerCase();
+
+  if (normalizedGuess.length !== length) {
+    return false;
+  }
+
+  const isDigitValid = createDigitValidator(base);
+  const chars = [...normalizedGuess];
+
+  const allCharsValid = chars.every(isDigitValid);
+  if (!allCharsValid) {
+    return false;
+  }
+
+  const uniqueCharsCount = new Set(chars).size;
+  return uniqueCharsCount === length;
 };
