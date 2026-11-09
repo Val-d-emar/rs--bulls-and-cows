@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "sourceMap": true,
+    "noEmit": false,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "tests/**/*"]
+}
