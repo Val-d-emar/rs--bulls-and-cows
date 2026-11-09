@@ -50,3 +50,15 @@ export interface GameState {
   readonly startTimeMs: number;
   readonly endTimeMs: number | null;
 }
+
+/**
+ * Запись в таблице рекордов
+ */
+export interface LeaderboardEntry {
+  readonly id: string;
+  readonly length: number;
+  readonly base: Radix;
+  readonly attempts: number;
+  readonly durationMs: number;
+  readonly date: string;
+}
