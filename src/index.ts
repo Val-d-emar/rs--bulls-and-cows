@@ -1,3 +1,5 @@
-export const initApp = (): void => {
-  // Инициализация игры будет добавлена позже
-};
+import { mountApp } from './ui/app.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  mountApp(document.body);
+});
