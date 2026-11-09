@@ -6,3 +6,11 @@
  * 16 - шестнадцатеричная (hex)
  */
 export type Radix = 2 | 8 | 10 | 16;
+
+/**
+ * Результат сравнения попытки с секретным числом.
+ */
+export interface GuessScore {
+  readonly bulls: number;
+  readonly cows: number;
+}
