@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createDigitValidator } from '../src/core/validator.js';
+import { createDigitValidator, isValidGuess } from '../src/core/validator.js';
 
 describe('createDigitValidator', () => {
   describe('Binary system (base 2)', () => {
@@ -85,5 +85,43 @@ describe('createDigitValidator', () => {
       expect(isDecDigit(' ')).toBe(false);
       expect(isDecDigit('\n')).toBe(false);
     });
+  });
+});
+
+describe('isValidGuess', () => {
+  it('should accept a valid guess for decimal system', () => {
+    expect(isValidGuess('1234', 4, 10)).toBe(true);
+    expect(isValidGuess('012', 3, 10)).toBe(true);
+  });
+
+  it('should accept a valid guess for binary system', () => {
+    expect(isValidGuess('01', 2, 2)).toBe(true);
+    expect(isValidGuess('10', 2, 2)).toBe(true);
+  });
+
+  it('should accept a valid hex guess with case-insensitivity', () => {
+    expect(isValidGuess('1aB2', 4, 16)).toBe(true);
+  });
+
+  it('should reject guesses with incorrect length', () => {
+    expect(isValidGuess('123', 4, 10)).toBe(false);
+    expect(isValidGuess('12345', 4, 10)).toBe(false);
+    expect(isValidGuess('', 4, 10)).toBe(false);
+  });
+
+  it('should reject guesses containing invalid characters for the base', () => {
+    expect(isValidGuess('12', 2, 2)).toBe(false);
+    expect(isValidGuess('189', 3, 8)).toBe(false);
+    expect(isValidGuess('1g23', 4, 16)).toBe(false);
+    expect(isValidGuess('12-3', 4, 10)).toBe(false);
+  });
+
+  it('should reject guesses with duplicate characters', () => {
+    expect(isValidGuess('1123', 4, 10)).toBe(false);
+    expect(isValidGuess('1231', 4, 10)).toBe(false);
+  });
+
+  it('should reject hex guesses with duplicates in different cases (e.g. "a" and "A")', () => {
+    expect(isValidGuess('1aA2', 4, 16)).toBe(false);
   });
 });
